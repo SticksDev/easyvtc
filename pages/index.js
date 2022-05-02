@@ -11,10 +11,22 @@ export default function Home() {
                 name='viewport'
                 content='width=device-width, initial-scale=1, shrink-to-fit=no'
             />
-            <meta name='description' content />
-            <meta name='author' content />
+            <meta content='Easy VTC | Home' property='og:title' />
+            <meta content='Easy VTC is providing mangement services for VTCs in truckersMP.' property='og:description' />
+            <meta
+                content='https://easyvtc.app/'
+                property='og:url'
+            />
+            <meta
+                content='https://easyvtc.app/EasyVTC-OnlyLogo.png'
+                property='og:image'
+            />
+            <meta
+                content='#6366F1'
+                data-react-helmet='true'
+                name='theme-color'
+            />
             <link rel='stylesheet' href='css/tailwind/tailwind.min.css' />
-            <link rel='stylesheet' href='css/site/main.css' />
             <link rel='script' href='js/site/main.js' />
             <script src='https://unpkg.com/typewriter-effect@latest/dist/core.js'></script>
             <script src='js/type.js'></script>

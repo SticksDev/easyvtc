@@ -1,7 +1,6 @@
 import Swal from 'sweetalert2';
 
 export default function signUp() {
-    
     function toastFactory(type, title, text, time, showConfirmButton) {
         const Toast = Swal.mixin({
             toast: true,
@@ -21,12 +20,11 @@ export default function signUp() {
             text: text,
         });
     }
-    
-    
+
     async function submitForm() {
         // Get the form data
         const signUpButton = document.getElementById('signUpButton');
-        
+
         const formData = {
             email: $('#email').val(),
             password: $('#passwordPlain').val(),
@@ -35,68 +33,88 @@ export default function signUp() {
             aboutVTC: $('#aboutVTC').val(),
             discordId: $('#discordId').val(),
             discordTag: $('#discordTag').val(),
-            testCheckBox: $('#testCheckBox').is(":checked"),
-            emailCheckBox: $('#emailCheckBox').is(":checked"),
+            testCheckBox: $('#testCheckBox').is(':checked'),
+            emailCheckBox: $('#emailCheckBox').is(':checked'),
         };
 
-        
-
         // If ANY of the fields are empty, don't submit
-        if (formData.email === '' || formData.password === '' || formData.first_name === '' || formData.last_name === '' || formData.aboutVTC === '' || formData.discordContact === '') {
-            toastFactory('error', 'Error', 'Please fill out all fields.', '5000');
+        if (
+            formData.email === '' ||
+            formData.password === '' ||
+            formData.first_name === '' ||
+            formData.last_name === '' ||
+            formData.aboutVTC === '' ||
+            formData.discordContact === ''
+        ) {
+            toastFactory(
+                'error',
+                'Error',
+                'Please fill out all fields.',
+                '5000',
+            );
             return;
         }
 
         if (!formData.email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
-            return toastFactory('error', 'Email Invaild', 'Please enter an vaild email', '5000');
+            return toastFactory(
+                'error',
+                'Email Invaild',
+                'Please enter an vaild email',
+                '5000',
+            );
         }
 
         // Disable the submit button
         signUpButton.disabled = true;
 
-        // Set the text to "Processing" 
-        signUpButton.innerText = "Processing...";
+        // Set the text to "Processing"
+        signUpButton.innerText = 'Processing...';
 
         // Show the loader using jQuery
         $('#loaderSvg').show();
-        
+
         // Create the request to the backend (/api/submitForm)
 
         const request = await fetch('/api/submitForm', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData)
-        })
+            body: JSON.stringify(formData),
+        });
 
-        
-
-        if(request.status !== 200) {
-            toastFactory('error', 'Error', 'There was an error submitting your information. Please try again.', '8000');
+        if (request.status !== 200) {
+            toastFactory(
+                'error',
+                'Error',
+                'There was an error submitting your information. Please try again.',
+                '8000',
+            );
 
             // Re-enable the submit button
             signUpButton.disabled = false;
-            signUpButton.innerText = "Submit!";
+            signUpButton.innerText = 'Submit!';
 
             // Log the failed request
-            console.warn(`Failed to submit to supabase: ${request.status} - ${request.body}`); 
+            console.warn(
+                `Failed to submit to supabase: ${request.status} - ${request.body}`,
+            );
             return;
         }
 
         // Success!
         Swal.fire({
-            title: 'Success!', 
-            html: 'You have been added to the waitlist. You should also join our discord server for a better chance of being picked. (Use the buttons Below!)', 
+            title: 'Success!',
+            html: 'You have been added to the waitlist. You should also join our discord server for a better chance of being picked. (Use the buttons Below!)',
             icon: 'success',
             showDenyButton: true,
             denyButtonText: 'Close',
             confirmButtonText: 'Join Discord Server',
             allowOutsideClick: false,
         }).then((result) => {
-            if(result.isConfirmed) {
+            if (result.isConfirmed) {
                 // Open the discord server in the same tab
-                window.open('https://discord.gg/VtC9qQW', '_self');
+                window.open('https://discord.gg/8a4bmQrj7f', '_self');
                 return;
             } else {
                 window.location.href = '/';
@@ -112,6 +130,21 @@ export default function signUp() {
             <meta
                 name='viewport'
                 content='width=device-width, initial-scale=1, shrink-to-fit=no'
+            />
+            <meta content='Easy VTC' property='og:title' />
+            <meta
+                content='Easy VTC is providing mangement services for VTCs in truckersMP.'
+                property='og:description'
+            />
+            <meta content='https://easyvtc.app/signup' property='og:url' />
+            <meta
+                content='https://easyvtc.app/img/EasyVTC-OnlyLogo.png'
+                property='og:image'
+            />
+            <meta
+                content='#6366F1'
+                data-react-helmet='true'
+                name='theme-color'
             />
             <meta name='description' content />
             <meta name='author' content />
@@ -195,9 +228,7 @@ export default function signUp() {
                                         name='testUserCheckBox'
                                         id='testCheckBox'
                                     />
-                                    <span
-                                        className='text-sm text-gray-500'
-                                    >
+                                    <span className='text-sm text-gray-500'>
                                         I would like to test EasyVTC
                                     </span>
                                 </label>
@@ -208,9 +239,7 @@ export default function signUp() {
                                         name='emailCheckBox'
                                         id='emailCheckBox'
                                     />
-                                    <span
-                                        className='text-sm text-gray-500'
-                                    >
+                                    <span className='text-sm text-gray-500'>
                                         I would like email notifications
                                     </span>
                                 </label>
