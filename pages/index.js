@@ -18,7 +18,7 @@ export default function Home() {
                 property='og:url'
             />
             <meta
-                content='https://easyvtc.app/EasyVTC-OnlyLogo.png'
+                content='https://easyvtc.app/img/EasyVTC-OnlyLogo.png'
                 property='og:image'
             />
             <meta
