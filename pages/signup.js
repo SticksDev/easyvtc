@@ -1,10 +1,6 @@
 import Swal from 'sweetalert2';
 
-import { createClient } from '@supabase/supabase-js'
-
 export default function signUp() {
-    const supakey = process.env.supakey ? process.env.supakey : 'nokey';
-    const supabase = createClient('https://iutoeoujqhpmcnenisep.supabase.co', supakey)
     
     function toastFactory(type, title, text, time, showConfirmButton) {
         const Toast = Swal.mixin({
@@ -30,7 +26,6 @@ export default function signUp() {
     async function submitForm() {
         // Get the form data
         const signUpButton = document.getElementById('signUpButton');
-        const loaderSvg = document.getElementById('loaderSvg');
         
         const formData = {
             email: $('#email').val(),
@@ -45,15 +40,15 @@ export default function signUp() {
         };
 
         
-        if (!formData.email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
-            return toastFactory('error', 'Email Invaild', 'Please enter an vaild email', '5000');
-        }
-    
 
         // If ANY of the fields are empty, don't submit
         if (formData.email === '' || formData.password === '' || formData.first_name === '' || formData.last_name === '' || formData.aboutVTC === '' || formData.discordContact === '') {
             toastFactory('error', 'Error', 'Please fill out all fields.', '5000');
             return;
+        }
+
+        if (!formData.email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
+            return toastFactory('error', 'Email Invaild', 'Please enter an vaild email', '5000');
         }
 
         // Disable the submit button
@@ -62,31 +57,30 @@ export default function signUp() {
         // Set the text to "Processing" 
         signUpButton.innerText = "Processing...";
 
-        // Submit data to supabase
-        const { data, error } = await supabase
-            .from('waitlist')
-            .insert([
-                {
-                    FirstName: formData.first_name,
-                    LastName: formData.last_name,
-                    discordId: formData.discordId,
-                    discordUser: formData.discordTag,
-                    emailAddress: formData.email,
-                    wouldTest: formData.testCheckBox,
-                    emailNotifications: formData.emailCheckBox
-                }
-            ])
+        // Show the loader using jQuery
+        $('#loaderSvg').show();
+        
+        // Create the request to the backend (/api/submitForm)
+
+        const request = await fetch('/api/submitForm', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
 
         
 
-        if(error) {
+        if(request.status !== 200) {
             toastFactory('error', 'Error', 'There was an error submitting your information. Please try again.', '8000');
 
             // Re-enable the submit button
             signUpButton.disabled = false;
             signUpButton.innerText = "Submit!";
 
-            console.warn(`Failed to submit to supabase (${error.code}): ${error.message}`);
+            // Log the failed request
+            console.warn(`Failed to submit to supabase: ${request.status} - ${request.body}`); 
             return;
         }
 
@@ -198,8 +192,7 @@ export default function signUp() {
                                     <input
                                         className='mr-1'
                                         type='checkbox'
-                                        name='terms'
-                                        defaultValue={1}
+                                        name='testUserCheckBox'
                                         id='testCheckBox'
                                     />
                                     <span
@@ -212,8 +205,7 @@ export default function signUp() {
                                     <input
                                         className='mr-1'
                                         type='checkbox'
-                                        name='terms'
-                                        defaultValue={1}
+                                        name='emailCheckBox'
                                         id='emailCheckBox'
                                     />
                                     <span
@@ -224,14 +216,14 @@ export default function signUp() {
                                 </label>
 
                                 <button
-                                    type='submit'
-                                    class='block w-full mb-4 px-5 py-3 text-sm bg-indigo-500 hover:bg-indigo-600 text-white font-semibold border border-indigo-500 hover:border-indigo-600 rounded transition duration-200'
+                                    type='button'
+                                    className='block w-full mb-4 px-5 py-3 text-sm bg-indigo-500 hover:bg-indigo-600 text-white font-semibold border border-indigo-500 hover:border-indigo-600 rounded transition duration-200'
                                     onClick={submitForm}
                                     id='signUpButton'
                                 >
                                     <svg
                                         role='status'
-                                        class='inline w-4 h-4 mr-3 text-white animate-spin'
+                                        className='inline w-4 h-4 mr-3 text-white animate-spin'
                                         viewBox='0 0 100 101'
                                         fill='none'
                                         xmlns='http://www.w3.org/2000/svg'
