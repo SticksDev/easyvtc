@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2';
+
 import { createClient } from '@supabase/supabase-js'
 
 export default function signUp() {
