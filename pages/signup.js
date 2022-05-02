@@ -3,7 +3,8 @@ import Swal from 'sweetalert2';
 import { createClient } from '@supabase/supabase-js'
 
 export default function signUp() {
-    const supabase = createClient('https://iutoeoujqhpmcnenisep.supabase.co', process.env.supakey)
+    const supakey = process.env.supakey ? process.env.supakey : 'nokey';
+    const supabase = createClient('https://iutoeoujqhpmcnenisep.supabase.co', supakey)
     
     function toastFactory(type, title, text, time, showConfirmButton) {
         const Toast = Swal.mixin({
